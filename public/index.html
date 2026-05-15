@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plivo IVR System - InspireWorks Demo</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎤 InspireWorks IVR System</h1>
+            <p>Demo: Multi-level Voice Menu with OTP Authentication</p>
+        </div>
+
+        <div class="card">
+            <div class="section">
+                <h2>Make an Outbound Call</h2>
+                <form id="callForm">
+                    <div class="form-group">
+                        <label for="phoneNumber">Target Phone Number:</label>
+                        <input 
+                            type="tel" 
+                            id="phoneNumber" 
+                            name="phoneNumber" 
+                            placeholder="+1 (555) 123-4567"
+                            required
+                        >
+                        <p class="help-text">Format: +1234567890 (E.164 format)</p>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary" id="submitBtn">
+                        Make Call
+                    </button>
+                </form>
+            </div>
+
+            <div id="responseSection" class="section response-section hidden">
+                <h3>Call Status</h3>
+                <div id="responseContent"></div>
+                <button class="btn btn-secondary" id="clearBtn">Clear</button>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>📋 Demo Flow</h2>
+            <ol class="flow-steps">
+                <li><strong>Call Answer:</strong> Your phone will ring, answer it</li>
+                <li><strong>OTP Prompt:</strong> Enter your 4-digit PIN: <code>1503</code></li>
+                <li><strong>Wrong OTP (Optional):</strong> Try entering wrong PIN first to see retry</li>
+                <li><strong>Language Menu:</strong> Press <code>1</code> for English or <code>2</code> for Spanish</li>
+                <li><strong>Action Menu:</strong> Press <code>1</code> to hear audio message or <code>2</code> to connect with associate</li>
+                <li><strong>Complete:</strong> Call will end after selection</li>
+            </ol>
+        </div>
+
+        <div class="card">
+            <h2>⚙️ Setup Instructions</h2>
+            <div class="instructions">
+                <h3>Prerequisites:</h3>
+                <ul>
+                    <li>Plivo account with Auth ID and Auth Token</li>
+                    <li>A verified phone number in Plivo (for caller ID)</li>
+                    <li>ngrok installed for local development</li>
+                </ul>
+
+                <h3>Steps:</h3>
+                <ol>
+                    <li>Create <code>.env</code> file from <code>.env.example</code></li>
+                    <li>Add your Plivo credentials (PLIVO_AUTH_ID, PLIVO_AUTH_TOKEN, PLIVO_PHONE_NUMBER)</li>
+                    <li>Run ngrok: <code>ngrok http 3000</code></li>
+                    <li>Update <code>CALLBACK_BASE_URL</code> in .env with ngrok HTTPS URL</li>
+                    <li>Install dependencies: <code>npm install</code></li>
+                    <li>Start server: <code>npm start</code></li>
+                    <li>Open <code>http://localhost:3000</code> in browser</li>
+                </ol>
+            </div>
+        </div>
+
+        <div class="card footer-info">
+            <p><strong>OTP for Demo:</strong> 1503 (March 15th in DDMM format)</p>
+            <p><strong>Audio URL:</strong> Plivo sample MP3 message</p>
+            <p><strong>Associate Number:</strong> Placeholder for call forwarding demo</p>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plivo IVR Demo | Secure Communication</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <div class="status-badge">Live System</div>
+            
+            <button class="theme-toggle" id="theme-toggle" title="Toggle Mode">
+                <span id="theme-icon">🌙</span>
+            </button>
+
+            <header>
+                <h1>Plivo IVR Agent</h1>
+                <p class="subtitle">A secure, multi-level communication gateway powered by automated Voice APIs.</p>
+            </header>
+
+            <main>
+                <form action="/start-call" method="POST" id="call-form">
+                    <div class="form-group">
+                        <label for="phone_number">Destination Endpoint</label>
+                        <input type="text" id="phone_number" name="phone_number" placeholder="e.g. 919999999999" required autocomplete="off">
+                    </div>
+                    <button type="submit" class="btn" id="submit-btn">
+                        <span class="btn-text">Initiate Secure Call</span>
+                        <div class="spinner"></div>
+                    </button>
+                </form>
+
+                {% if message %}
+                <div class="message {{ 'error' if is_error else 'success' }}">
+                    {{ message }}
+                </div>
+                {% endif %}
+
+                <section class="flow-section">
+                    <h3>Protocol Architecture</h3>
+                    <div class="flow-list">
+                        <div class="flow-item">
+                            <span class="badge">1</span>
+                            <div class="flow-content">
+                                <strong>Outbound REST Trigger</strong>
+                                <p>Encrypted handshake with Plivo's global voice network.</p>
+                            </div>
+                        </div>
+                        <div class="flow-item">
+                            <span class="badge">2</span>
+                            <div class="flow-content">
+                                <strong>DTMF Authentication</strong>
+                                <p>Identity verification via 4-digit DDMM passcode (1503).</p>
+                            </div>
+                        </div>
+                        <div class="flow-item">
+                            <span class="badge">3</span>
+                            <div class="flow-content">
+                                <strong>Multilingual Logic</strong>
+                                <p>Real-time branching between English & Spanish modules.</p>
+                            </div>
+                        </div>
+                        <div class="flow-item">
+                            <span class="badge">4</span>
+                            <div class="flow-content">
+                                <strong>Dynamic Termination</strong>
+                                <p>Automated media playback or live associate handover.</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </main>
+
+            <footer>
+                <p>&copy; 2024 InspireWorks Communications</p>
+                <div class="footer-links">
+                    <a href="https://www.plivo.com/docs/" target="_blank">Docs</a>
+                    <a href="#" onclick="alert('Demo Mode Active')">Status</a>
+                    <a href="https://github.com/" target="_blank">Repo</a>
+                </div>
+            </footer>
+        </div>
+    </div>
+
+    <script>
+        const themeToggle = document.getElementById('theme-toggle');
+        const themeIcon = document.getElementById('theme-icon');
+        const html = document.documentElement;
+        const form = document.getElementById('call-form');
+        const btn = document.getElementById('submit-btn');
+
+        // Theme Switcher Logic
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        html.setAttribute('data-theme', savedTheme);
+        themeIcon.textContent = savedTheme === 'dark' ? '☀️' : '🌙';
+
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = html.getAttribute('data-theme');
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+            html.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            themeIcon.textContent = newTheme === 'dark' ? '☀️' : '🌙';
+        });
+
+        // Loading State Logic
+        form.addEventListener('submit', () => {
+            btn.classList.add('loading');
+            btn.style.pointerEvents = 'none';
+        });
+    </script>
+</body>
+</html>
