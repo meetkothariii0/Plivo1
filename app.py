@@ -1,6 +1,6 @@
 import os
 import logging
-from flask import Flask, request, Response, render_template
+from flask import Flask, request, Response, render_template, jsonify
 from plivo import plivoxml, RestClient
 from dotenv import load_dotenv
 
@@ -82,18 +82,21 @@ def index():
 
 @app.route('/start-call', methods=['POST'])
 def start_call():
+    """Handles the form submission to trigger a call via AJAX."""
     to_number = request.form.get('phone_number')
+    
     if not to_number:
-        return render_template('index.html', message="Please enter a phone number.", is_error=True)
+        return jsonify({"success": False, "message": "Please enter a phone number."}), 400
+
     try:
         uuid = create_call(to_number)
         msg = f"Call initiated successfully. Request UUID: {uuid}"
         logger.info(msg)
-        return render_template('index.html', message=msg, is_error=False)
+        return jsonify({"success": True, "message": msg})
     except Exception as e:
         err_msg = f"Failed to initiate call: {str(e)}"
         logger.error(err_msg)
-        return render_template('index.html', message=err_msg, is_error=True)
+        return jsonify({"success": False, "message": err_msg}), 500
 
 # --- IVR Webhook Routes (Using Absolute Redirects) ---
 

@@ -22,7 +22,7 @@
             </header>
 
             <main>
-                <form action="/start-call" method="POST" id="call-form">
+                <form id="call-form">
                     <div class="form-group">
                         <label for="phone_number">Destination Endpoint</label>
                         <input type="text" id="phone_number" name="phone_number" placeholder="e.g. 919999999999" required autocomplete="off">
@@ -33,11 +33,8 @@
                     </button>
                 </form>
 
-                {% if message %}
-                <div class="message {{ 'error' if is_error else 'success' }}">
-                    {{ message }}
-                </div>
-                {% endif %}
+                <!-- Dynamic Message Box (No initial Jinja if, handled by JS) -->
+                <div id="response-message" class="message" style="display: none;"></div>
 
                 <section class="flow-section">
                     <h3>Protocol Architecture</h3>
@@ -91,6 +88,7 @@
         const html = document.documentElement;
         const form = document.getElementById('call-form');
         const btn = document.getElementById('submit-btn');
+        const messageBox = document.getElementById('response-message');
 
         // Theme Switcher Logic
         const savedTheme = localStorage.getItem('theme') || 'light';
@@ -105,10 +103,38 @@
             themeIcon.textContent = newTheme === 'dark' ? '☀️' : '🌙';
         });
 
-        // Loading State Logic
-        form.addEventListener('submit', () => {
+        // AJAX Call Initiation (No Refresh)
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            // UI State: Loading
             btn.classList.add('loading');
             btn.style.pointerEvents = 'none';
+            messageBox.style.display = 'none';
+
+            const formData = new FormData(form);
+
+            try {
+                const response = await fetch('/start-call', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const result = await response.json();
+                
+                // UI State: Response
+                messageBox.textContent = result.message;
+                messageBox.className = `message ${result.success ? 'success' : 'error'}`;
+                messageBox.style.display = 'block';
+
+            } catch (error) {
+                messageBox.textContent = "Network error. Please try again.";
+                messageBox.className = "message error";
+                messageBox.style.display = 'block';
+            } finally {
+                btn.classList.remove('loading');
+                btn.style.pointerEvents = 'auto';
+            }
         });
     </script>
 </body>
