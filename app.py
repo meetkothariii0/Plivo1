@@ -174,8 +174,9 @@ def handle_final_action():
         elif action_digit == '2':
             msg = "Connecting to an associate." if language_code == "en" else "Conectando con un agente."
             response.add(plivoxml.SpeakElement(msg, language=tts_lang))
-            dial_verb = response.add(plivoxml.DialElement())
+            dial_verb = plivoxml.DialElement()
             dial_verb.add(plivoxml.NumberElement(LIVE_AGENT_PHONE))
+            response.add(dial_verb)
         else:
             response.add(plivoxml.SpeakElement("Invalid choice.", language=tts_lang))
             response.add(plivoxml.RedirectElement(f"{BASE_URL}/language", method="POST"))
